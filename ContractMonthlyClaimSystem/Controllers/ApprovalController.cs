@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using static ContractMonthlyClaimSystem.Models.Claim;
+using ContractMonthlyClaimSystem.Extensions;
 
 [Authorize(Roles = "Coordinator,Manager")]
 

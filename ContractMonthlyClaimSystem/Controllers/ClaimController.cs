@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ContractMonthlyClaimSystem.Extensions;
 
 namespace ContractMonthlyClaimSystem.Controllers
 {
