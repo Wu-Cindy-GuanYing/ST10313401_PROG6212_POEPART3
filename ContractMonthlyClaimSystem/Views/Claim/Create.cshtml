@@ -1,0 +1,71 @@
+﻿@model ContractMonthlyClaimSystem.ViewModels.ClaimCreateVm
+@{
+    ViewData["Title"] = "Submit Claim";
+}
+<div class="card shadow p-4" style="max-width:680px;margin:auto">
+    <h2 class="mb-3">Submit a Claim</h2>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label asp-for="HoursWorked" class="form-label"></label>
+            <input asp-for="HoursWorked" class="form-control" />
+            <span asp-validation-for="HoursWorked" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Hourly Rate</label>
+            <div class="alert alert-info p-3">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <strong class="d-block">Automatically Applied</strong>
+                        <small class="text-muted">Your hourly rate is securely retrieved from your lecturer profile in the system</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Notes" class="form-label">Notes</label>
+            <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Uploads" class="form-label">Supporting Documents (PDF/DOCX/XLSX, max 10MB each)</label>
+            <input asp-for="Uploads" type="file" class="form-control" multiple accept=".pdf,.docx,.xlsx" id="fileInput" />
+            <span asp-validation-for="Uploads" class="text-danger"></span>
+            <small class="form-text text-muted">Hold Ctrl to select multiple files</small>
+        </div>
+
+        <!-- Simple Uploaded Documents Preview -->
+        <div class="mb-3" id="uploadPreview" style="display: none;">
+            <h5>Selected Documents:</h5>
+            <div id="fileList" class="alert alert-info">
+                <!-- Files will be listed here -->
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg w-100" type="submit">Submit Claim</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const fileList = document.getElementById('fileList');
+            const uploadPreview = document.getElementById('uploadPreview');
+
+            if (files.length > 0) {
+                let fileNames = [];
+                for (let i = 0; i < files.length; i++) {
+                    const fileSize = (files[i].size / (1024 * 1024)).toFixed(2);
+                    fileNames.push(`${files[i].name} (${fileSize} MB)`);
+                }
+
+                fileList.innerHTML = fileNames.join('<br>');
+                uploadPreview.style.display = 'block';
+            } else {
+                uploadPreview.style.display = 'none';
+            }
+        });
+    </script>
+}

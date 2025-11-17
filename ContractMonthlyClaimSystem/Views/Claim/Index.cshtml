@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ContractMonthlyClaimSystem.Models.Claim>
+@{
+    ViewData["Title"] = "Claims";
+}
+
+<h2>Claims</h2>
+
+@if (TempData["Message"] is string m)
+{
+    <div class="alert alert-success">@m</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Lecturer</th>
+            <th>Month</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Docs</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            var badge = c.Status.ToString() == "Rejected" ? "bg-danger" :
+            c.Status.ToString().StartsWith("Approved") ? "bg-success" :
+            c.Status.ToString() == "Paid" ? "bg-info" : "bg-warning";
+            <tr>
+                <td>@c.Id</td>
+                <td>@c.LecturerName</td>
+                <td>@c.Month.ToString("MMM yyyy")</td>
+                <td>@c.TotalAmount.ToString("C")</td>
+                <td><span class="badge @badge">@c.Status</span></td>
+                <td>
+                    @if (c.Documents.Any())
+                    {
+                        <div class="btn-group-vertical btn-group-sm">
+                            @foreach (var d in c.Documents)
+                            {
+                                <a class="btn btn-outline-secondary text-start mb-1"
+                                   href="@Url.Action("DownloadDocument", "Claim", new { id = d.Id })"
+                                   target="_blank"
+                                   download="@d.OriginalFileName"
+                                   title="@d.OriginalFileName">
+                                    📎 @(d.OriginalFileName.Length > 20 ? d.OriginalFileName.Substring(0, 17) + "..." : d.OriginalFileName)
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="text-muted">None</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

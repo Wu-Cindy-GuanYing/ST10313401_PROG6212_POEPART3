@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="dashboard">
+    <h2>Welcome to Contract Monthly Claim System</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Submit New Claim</h5>
+                    <p class="card-text">Create and submit a new monthly claim</p>
+                    <a href="@Url.Action("Create", "Claim")" class="btn btn-primary">Submit Claim</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">My Claims</h5>
+                    <p class="card-text">View your submitted claims</p>
+                    <a href="@Url.Action("Index", "Claim")" class="btn btn-info">View Claims</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Coordinator Approvals</h5>
+                    <p class="card-text">Review claims waiting for coordinator approval</p>
+                    <a href="@Url.Action("Index", "Approval")" class="btn btn-warning">Review Claims</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Manager Approvals</h5>
+                    <p class="card-text">Review claims waiting for manager approval</p>
+                    <a href="@Url.Action("Review", "Approval")" class="btn btn-warning">Review Claims</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
