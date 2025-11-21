@@ -2,7 +2,7 @@
 FINAL POE PROG6212
 
 YouTube link: https://youtu.be/ZmPVnB7u10s
-GitHub: 
+GitHub: https://github.com/Wu-Cindy-GuanYing/ST10313401_PROG6212_POEPART3.git
 
 Contract Monthly Claim System
 A comprehensive ASP.NET Core web application for managing monthly claims submission, approval, and payroll processing for contract lecturers in educational institutions.
