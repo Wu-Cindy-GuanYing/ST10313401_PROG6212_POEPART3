@@ -1,0 +1,123 @@
+﻿@{
+    ViewData["Title"] = "HR Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4">HR Dashboard</h1>
+            <p class="lead">Welcome to the Contract Monthly Claim System - HR Portal</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">@ViewBag.LecturerCount</h4>
+                            <p class="card-text">Total Lecturers</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="@Url.Action("LecturerList")" class="text-white">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">@ViewBag.ActiveLecturers</h4>
+                            <p class="card-text">Active Lecturers</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-user-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">@ViewBag.PendingClaims</h4>
+                            <p class="card-text">Pending Claims</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">$@(ViewBag.TotalPaid > 0 ? @ViewBag.TotalPaid : 0)</h4>
+                            <p class="card-text">Total Paid</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="@Url.Action("CreateLecturer")" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-plus me-2"></i>Add New Lecturer
+                        </a>
+                        <a href="@Url.Action("LecturerList")" class="list-group-item list-group-item-action">
+                            <i class="fas fa-list me-2"></i>Manage Lecturers
+                        </a>
+                        <a href="@Url.Action("GenerateReport")" class="list-group-item list-group-item-action">
+                            <i class="fas fa-chart-bar me-2"></i>Generate Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Recent system activities will appear here.</p>
+                    <!-- You can add recent activities or notifications here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // You can add any dashboard-specific JavaScript here
+        console.log("HR Dashboard loaded");
+    </script>
+}

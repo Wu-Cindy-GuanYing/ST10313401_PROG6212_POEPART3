@@ -2,7 +2,6 @@ using ContractMonthlyClaimSystem.Data;
 using ContractMonthlyClaimSystem.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Oracle.EntityFrameworkCore;
 
 namespace ContractMonthlyClaimSystem
 {
@@ -12,11 +11,19 @@ namespace ContractMonthlyClaimSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add Entity Framework with Oracle
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseOracle(builder.Configuration.GetConnectionString("Default")));
+            // Debug: Show connection string
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            Console.WriteLine($"Connection String: {connectionString}");
 
-            // ADD IDENTITY CONFIGURATION (Critical Fix)
+            // Only register DbContext once
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                Console.WriteLine("Configuring DbContext with SQL Server");
+                options.UseSqlServer(connectionString);
+                options.EnableSensitiveDataLogging(); // Add this for debugging
+            });
+
+            // ADD IDENTITY CONFIGURATION
             builder.Services.AddIdentity<CMCSUser, IdentityRole>(options =>
             {
                 // Password settings (adjust as needed)
@@ -24,7 +31,7 @@ namespace ContractMonthlyClaimSystem
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 3; // Simple for development
+                options.Password.RequiredLength = 3;
                 options.Password.RequiredUniqueChars = 1;
 
                 // Lockout settings
@@ -65,7 +72,23 @@ namespace ContractMonthlyClaimSystem
 
             var app = builder.Build();
 
-            
+            // ADD DATABASE INITIALIZATION
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<AppDbContext>();
+                    context.Database.EnsureCreated(); // Creates database if it doesn't exist
+                    // Or use migrations: context.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred creating the DB.");
+                }
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -78,9 +101,8 @@ namespace ContractMonthlyClaimSystem
             app.UseRouting();
 
             // ADD AUTHENTICATION MIDDLEWARE 
-            app.UseAuthentication(); // Must come before UseAuthorization
-            app.UseAuthorization();  // Must come after UseAuthentication
-
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseSession();
 
             app.MapControllerRoute(

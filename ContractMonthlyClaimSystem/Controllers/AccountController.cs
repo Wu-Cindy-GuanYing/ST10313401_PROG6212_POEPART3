@@ -4,6 +4,7 @@ using ContractMonthlyClaimSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 using ContractMonthlyClaimSystem.Extensions;
+using ContractMonthlyClaimSystem.ViewModels;
 
 namespace ContractMonthlyClaimSystem.Controllers
 {
@@ -37,22 +38,43 @@ namespace ContractMonthlyClaimSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                // First, find the user by email
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
+
+                // Check if email is confirmed (if you require email confirmation)
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
+                    return View(model);
+                }
+
+                // Use the USERNAME for sign in, not email
+                var result = await _signInManager.PasswordSignInAsync(
+                    user.UserName, // ← Use UserName here, not Email
+                    model.Password,
+                    model.RememberMe,
+                    lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
                     // 🎯 SESSION MANAGEMENT
-                    var user = await _userManager.FindByEmailAsync(model.Email);
-                    if (user != null)
-                    {
-                        HttpContext.Session.SetString("UserRole", user.Role);
-                        HttpContext.Session.SetString("UserId", user.Id);
-                        HttpContext.Session.SetString("UserName", user.FullName);
+                    HttpContext.Session.SetString("UserRole", user.Role);
+                    HttpContext.Session.SetString("UserId", user.Id);
+                    HttpContext.Session.SetString("UserName", user.FullName);
 
-                        _logger.LogInformation($"User {user.FullName} with role {user.Role} logged in.");
-                    }
-
+                    _logger.LogInformation($"User {user.FullName} with role {user.Role} logged in.");
                     return RedirectToLocal(returnUrl);
+                }
+                else if (result.IsLockedOut)
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToAction("Lockout");
                 }
                 else
                 {
@@ -64,15 +86,21 @@ namespace ContractMonthlyClaimSystem.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost]  
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            // Clear session data
+            _logger.LogInformation("Logout POST method called.");
+
+            // Clear session data more thoroughly
             HttpContext.Session.Clear();
+            await HttpContext.Session.CommitAsync(); // Ensure session is committed
+
+            _logger.LogInformation("Session cleared.");
 
             await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
+            _logger.LogInformation("SignOutAsync completed.");
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -95,17 +123,5 @@ namespace ContractMonthlyClaimSystem.Controllers
         }
     }
 
-    public class LoginViewModel
-    {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; } = string.Empty;
-
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
-    }
+    
 }

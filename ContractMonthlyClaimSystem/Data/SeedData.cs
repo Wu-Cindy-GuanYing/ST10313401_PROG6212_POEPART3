@@ -34,7 +34,7 @@ namespace ContractMonthlyClaimSystem.Data
 
             await CreateUserWithRole(userManager, hrUser, "HR", "HR@Password123");
 
-            // Create default Coordinator
+            // Create default Program Coordinator
             var coordinatorUser = new CMCSUser
             {
                 UserName = "coordinator@university.ac.za",
@@ -46,7 +46,7 @@ namespace ContractMonthlyClaimSystem.Data
 
             await CreateUserWithRole(userManager, coordinatorUser, "Coordinator", "Coordinator@123");
 
-            // Create default Manager
+            // Create default Academic Manager
             var managerUser = new CMCSUser
             {
                 UserName = "manager@university.ac.za",

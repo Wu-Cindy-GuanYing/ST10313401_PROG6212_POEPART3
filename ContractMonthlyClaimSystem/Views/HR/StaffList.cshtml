@@ -1,0 +1,64 @@
+﻿@model List<StaffListViewModel>
+
+@{
+    ViewData["Title"] = "Staff Management";
+}
+
+<h2>Staff Management</h2>
+
+<div class="mb-3">
+    <a asp-action="CreateProgramCoordinator" class="btn btn-success">Create Program Coordinator</a>
+    <a asp-action="CreateAcademicManager" class="btn btn-info">Create Academic Manager</a>
+    <a asp-action="LecturerList" class="btn btn-secondary">Manage Lecturers</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var staff in Model)
+        {
+            <tr>
+                <td>@staff.Name</td>
+                <td>@staff.Email</td>
+                <td>
+                    <span class="badge @(staff.Role == "Program Coordinator" ? "bg-primary" : "bg-info")">
+                        @staff.Role
+                    </span>
+                </td>
+                <td>
+                    <span class="badge @(staff.IsActive ? "bg-success" : "bg-danger")">
+                        @(staff.IsActive ? "Active" : "Inactive")
+                    </span>
+                </td>
+                <td>@staff.CreatedDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="EditStaff" asp-route-id="@staff.Id" class="btn btn-sm btn-primary">Edit</a>
+                    <form asp-action="ToggleStaffStatus" asp-route-id="@staff.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm @(staff.IsActive ? "btn-warning" : "btn-success")">
+                            @(staff.IsActive ? "Deactivate" : "Activate")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

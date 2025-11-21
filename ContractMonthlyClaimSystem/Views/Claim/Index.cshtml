@@ -1,64 +1,102 @@
-﻿@model IEnumerable<ContractMonthlyClaimSystem.Models.Claim>
+﻿@model List<ContractMonthlyClaimSystem.Models.Claim>
 @{
-    ViewData["Title"] = "Claims";
+    ViewData["Title"] = "My Claims";
 }
 
-<h2>Claims</h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-6">
+                    <i class="bi bi-list-check me-2"></i>My Claims
+                </h1>
+                <a href="@Url.Action("Create")" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>New Claim
+                </a>
+            </div>
+        </div>
+    </div>
 
-@if (TempData["Message"] is string m)
-{
-    <div class="alert alert-success">@m</div>
-}
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Lecturer</th>
-            <th>Month</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Docs</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var c in Model)
-        {
-            var badge = c.Status.ToString() == "Rejected" ? "bg-danger" :
-            c.Status.ToString().StartsWith("Approved") ? "bg-success" :
-            c.Status.ToString() == "Paid" ? "bg-info" : "bg-warning";
-            <tr>
-                <td>@c.Id</td>
-                <td>@c.LecturerName</td>
-                <td>@c.Month.ToString("MMM yyyy")</td>
-                <td>@c.TotalAmount.ToString("C")</td>
-                <td><span class="badge @badge">@c.Status</span></td>
-                <td>
-                    @if (c.Documents.Any())
-                    {
-                        <div class="btn-group-vertical btn-group-sm">
-                            @foreach (var d in c.Documents)
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Claim History</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Claim ID</th>
+                                <th>Month</th>
+                                <th>Hours</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Submitted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var claim in Model)
                             {
-                                <a class="btn btn-outline-secondary text-start mb-1"
-                                   href="@Url.Action("DownloadDocument", "Claim", new { id = d.Id })"
-                                   target="_blank"
-                                   download="@d.OriginalFileName"
-                                   title="@d.OriginalFileName">
-                                    📎 @(d.OriginalFileName.Length > 20 ? d.OriginalFileName.Substring(0, 17) + "..." : d.OriginalFileName)
-                                </a>
+                                <tr>
+                                    <td><strong>#@claim.Id</strong></td>
+                                    <td>@claim.Month.ToString("MMMM yyyy")</td>
+                                    <td>@claim.TotalHours.ToString("F2")</td>
+                                    <td>$@claim.TotalAmount.ToString("F2")</td>
+                                    <td>
+                                        @switch (claim.Status)
+                                        {
+                                            case Claim.ClaimStatus.Pending:
+                                                <span class="badge bg-warning">Pending</span>
+                                                break;
+                                            case Claim.ClaimStatus.ApprovedByCoordinator:
+                                                <span class="badge bg-info">With Manager</span>
+                                                break;
+                                            case Claim.ClaimStatus.ApprovedByManager:
+                                                <span class="badge bg-success">Approved</span>
+                                                break;
+                                            case Claim.ClaimStatus.Rejected:
+                                                <span class="badge bg-danger">Rejected</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@claim.Status</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>@claim.SubmittedDate.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="@Url.Action("Details", new { id = claim.Id })"
+                                               class="btn btn-outline-primary" title="View Details">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             }
-                        </div>
-                    }
-                    else
-                    {
-                        <span class="text-muted">None</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">Details</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4">
+                    <i class="bi bi-file-earmark-text display-1 text-muted mb-3"></i>
+                    <h4>No Claims Found</h4>
+                    <p class="text-muted">You haven't submitted any claims yet. Get started by creating your first claim.</p>
+                    <a href="@Url.Action("Create")" class="btn btn-primary">Create First Claim</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

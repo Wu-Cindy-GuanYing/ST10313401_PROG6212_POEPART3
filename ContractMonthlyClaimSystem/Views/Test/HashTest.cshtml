@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Password Hash Test";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">ASP.NET Core Identity Password Hash Test</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        Test how ASP.NET Core Identity hashes passwords using PBKDF2 with HMAC-SHA256.
+                        This creates a temporary user and shows the resulting hash.
+                    </p>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Error:</strong> @ViewBag.Error
+                        </div>
+                    }
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email (optional):</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="test@example.com" value="@ViewBag.Email">
+                            <div class="form-text">Optional - used as username for the temporary test user</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password to Hash:</label>
+                            <input type="text" class="form-control" id="password" name="password"
+                                   placeholder="Enter password to hash" value="@ViewBag.OriginalPassword" required>
+                            <div class="form-text">Enter the plain text password you want to see hashed</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Generate Hash</button>
+                    </form>
+
+                    @if (ViewBag.HashedPassword != null)
+                    {
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <h5>Hash Results:</h5>
+                            <div class="mb-3">
+                                <strong>Original Password:</strong>
+                                <code class="d-block mt-1 p-2 bg-white border">@ViewBag.OriginalPassword</code>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Hashed Password (PBKDF2):</strong>
+                                <code class="d-block mt-1 p-2 bg-white border small">@ViewBag.HashedPassword</code>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Hash Length:</strong>
+                                <span class="badge bg-info">@ViewBag.HashedPassword.Length characters</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>User Email:</strong>
+                                <span>@ViewBag.Email</span>
+                            </div>
+
+                            <div class="alert alert-info mt-3">
+                                <small>
+                                    <strong>Note:</strong> This uses ASP.NET Core Identity's default PBKDF2 hashing with:
+                                    <ul class="mb-0 mt-1">
+                                        <li>10,000 iterations</li>
+                                        <li>HMAC-SHA256</li>
+                                        <li>128-bit salt</li>
+                                        <li>256-bit output</li>
+                                    </ul>
+                                </small>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">About ASP.NET Core Identity Hashing</h5>
+                </div>
+                <div class="card-body">
+                    <p>ASP.NET Core Identity uses <strong>PBKDF2</strong> (Password-Based Key Derivation Function 2) with:</p>
+                    <ul>
+                        <li><strong>Algorithm:</strong> HMAC-SHA256</li>
+                        <li><strong>Iterations:</strong> 10,000 (as of ASP.NET Core 2.0+)</li>
+                        <li><strong>Salt:</strong> 128-bit (16 bytes) - randomly generated for each password</li>
+                        <li><strong>Output:</strong> 256-bit (32 bytes) hash</li>
+                    </ul>
+                    <p class="mb-0">The output format is: <code>{iterations}.{salt}.{subkey}</code></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    code {
+        word-break: break-all;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+    }
+</style>

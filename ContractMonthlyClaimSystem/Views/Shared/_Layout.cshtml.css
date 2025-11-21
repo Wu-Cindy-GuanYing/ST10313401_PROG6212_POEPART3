@@ -46,3 +46,104 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+
+.navbar-nav .nav-item .btn {
+    margin-left: 5px;
+    padding: 6px 12px;
+}
+
+
+    .btn-login {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+    .btn-login:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+
+    .user-menu {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
+        color: #495057 !important;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .user-menu:hover {
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .dropdown-menu {
+        border: none;
+        border-radius: 12px;
+        min-width: 200px;
+    }
+
+    .dropdown-item-custom {
+        border-radius: 6px;
+        margin: 2px 8px;
+        padding: 8px 12px;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-item-custom:hover {
+        background-color: #f8f9fa;
+        transform: translateX(4px);
+    }
+
+
+    .nav-link-hover {
+    position: relative;
+    transition: all 0.3s ease;
+    }
+
+    .nav-link-hover:hover {
+        color: #667eea !important;
+        transform: translateY(-1px);
+    }
+
+    .nav-link-hover::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    .nav-link-hover:hover::after {
+        width: 80%;
+    }
+
+    .welcome-text {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: #f8f9fa;
+    }
+
+    .box-shadow {
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .navbar-nav .btn,
+    .navbar-nav .nav-link,
+    .dropdown-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }

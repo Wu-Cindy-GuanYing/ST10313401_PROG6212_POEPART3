@@ -1,0 +1,61 @@
+﻿@model StaffEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Staff";
+}
+
+<h2>Edit Staff</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="EditStaff" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <input asp-for="IsActive" class="form-check-input" />
+                <label asp-for="IsActive" class="form-check-label"></label>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="IsProgramCoordinator" class="form-check-input" />
+                    <label asp-for="IsProgramCoordinator" class="form-check-label"></label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="IsAcademicManager" class="form-check-input" />
+                    <label asp-for="IsAcademicManager" class="form-check-label"></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update Staff</button>
+                <a asp-action="StaffList" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+
+        <!-- Password Reset Section -->
+        <div class="mt-4">
+            <h4>Reset Password</h4>
+            <form asp-action="ResetStaffPassword" method="post" class="form-inline">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div class="form-group mr-2">
+                    <input type="password" name="newPassword" class="form-control" placeholder="New Password" required />
+                </div>
+                <button type="submit" class="btn btn-warning">Reset Password</button>
+            </form>
+        </div>
+    </div>
+</div>

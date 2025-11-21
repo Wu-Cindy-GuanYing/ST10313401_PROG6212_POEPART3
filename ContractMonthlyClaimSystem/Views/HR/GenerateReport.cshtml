@@ -1,0 +1,254 @@
+﻿@{
+    ViewData["Title"] = "Generate Reports";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-6">Generate Reports</h1>
+            <p class="lead">Generate various reports and invoices for the system</p>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row mt-4">
+        <!-- Monthly Invoice -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-file-earmark-text me-2"></i>Monthly Invoice
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="GenerateMonthlyInvoice" method="post" target="_blank">
+                        <div class="form-group mb-3">
+                            <label class="form-label">Select Lecturer</label>
+                            <select name="LecturerId" class="form-select" required>
+                                <option value="">-- Select Lecturer --</option>
+                                @if (ViewBag.Lecturers != null)
+                                {
+                                    foreach (var lecturer in ViewBag.Lecturers)
+                                    {
+                                        <option value="@lecturer.Id">@lecturer.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="">No lecturers available</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Month</label>
+                                    <select name="Month" class="form-select" required>
+                                        <option value="">-- Select Month --</option>
+                                        @for (int i = 1; i <= 12; i++)
+                                        {
+                                            <option value="@i">@System.Globalization.DateTimeFormatInfo.CurrentInfo.GetMonthName(i)</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Year</label>
+                                    <select name="Year" class="form-select" required>
+                                        <option value="">-- Select Year --</option>
+                                        @for (int year = DateTime.Now.Year; year >= DateTime.Now.Year - 5; year--)
+                                        {
+                                            <option value="@year">@year</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-download me-2"></i>Generate Invoice
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payroll Report -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-cash-coin me-2"></i>Payroll Report
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="GeneratePayrollReport" method="post" target="_blank">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Month</label>
+                                    <select name="Month" class="form-select" required>
+                                        <option value="">-- Select Month --</option>
+                                        @for (int i = 1; i <= 12; i++)
+                                        {
+                                            <option value="@i">@System.Globalization.DateTimeFormatInfo.CurrentInfo.GetMonthName(i)</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Year</label>
+                                    <select name="Year" class="form-select" required>
+                                        <option value="">-- Select Year --</option>
+                                        @for (int year = DateTime.Now.Year; year >= DateTime.Now.Year - 5; year--)
+                                        {
+                                            <option value="@year">@year</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-download me-2"></i>Generate Payroll Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Claims Report -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-bar-chart me-2"></i>Claims Report
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="GenerateClaimsReport" method="post" target="_blank">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="month" name="StartDate" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">End Date</label>
+                                    <input type="month" name="EndDate" class="form-control" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Status (Optional)</label>
+                            <select name="Status" class="form-select">
+                                <option value="">-- All Statuses --</option>
+                                <option value="0">Pending</option>
+                                <option value="1">ApprovedByCoordinator</option>
+                                <option value="2">ApprovedByManager</option>
+                                <option value="3">Paid</option>
+                                <option value="4">Rejected</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-info">
+                            <i class="bi bi-download me-2"></i>Generate Claims Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lecturer Report -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-people me-2"></i>Lecturer Report
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Generate a comprehensive report of all lecturers with their statistics.</p>
+                    <form asp-action="GenerateLecturerReport" method="post" target="_blank">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-download me-2"></i>Generate Lecturer Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Report -->
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-badge me-2"></i>Staff Report
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="GenerateStaffReport" method="post" target="_blank">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="bi bi-download me-2"></i>Generate Staff Report
+                            </button>
+                            <small class="form-text text-muted d-block mt-2">Generates a report of all Program Coordinators and Academic Managers</small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default month and year to current period
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1;
+            const currentYear = currentDate.getFullYear();
+
+            // Set default values for month/year selects
+            document.querySelectorAll('select[name="Month"]').forEach(select => {
+                select.value = currentMonth;
+            });
+
+            document.querySelectorAll('select[name="Year"]').forEach(select => {
+                select.value = currentYear;
+            });
+
+            // Set default date range for claims report (last 6 months)
+            const startDate = new Date(currentYear, currentMonth - 6, 1);
+            const endDate = new Date(currentYear, currentMonth - 1, 1);
+
+            const startDateInput = document.querySelector('input[name="StartDate"]');
+            const endDateInput = document.querySelector('input[name="EndDate"]');
+
+            if (startDateInput) {
+                startDateInput.value = startDate.toISOString().slice(0, 7);
+            }
+            if (endDateInput) {
+                endDateInput.value = endDate.toISOString().slice(0, 7);
+            }
+        });
+    </script>
+}
